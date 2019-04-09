@@ -1,0 +1,2 @@
+# beaver
+some useful class
