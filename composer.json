@@ -1,0 +1,19 @@
+{
+    "name": "hamdon/beaver",
+    "description": "some useful class",
+    "type": "library",
+    "require": {
+        "nesbot/carbon": "^2.16"
+    },
+    "authors": [
+        {
+            "name": "hamdon",
+            "email": "cao4141@qq.com"
+        }
+    ],
+	"autoload": {
+		"psr-4": {
+			"Hamdon\\Beaver\\": "src/"
+		}
+	}
+}
