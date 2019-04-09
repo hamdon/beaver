@@ -1,2 +1,2 @@
 # beaver
-some useful class
+some useful class for laravel
