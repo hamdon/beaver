@@ -1,6 +1,6 @@
 {
     "name": "hamdon/beaver",
-    "description": "some useful class",
+    "description": "some useful class, for laravel",
 	"license": "MIT",
     "type": "library",
     "require": {
