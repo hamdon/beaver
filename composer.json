@@ -1,6 +1,7 @@
 {
     "name": "hamdon/beaver",
     "description": "some useful class",
+	"license": "MIT",
     "type": "library",
     "require": {
         "nesbot/carbon": "^2.16"
