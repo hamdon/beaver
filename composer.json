@@ -4,7 +4,7 @@
 	"license": "MIT",
     "type": "library",
     "require": {
-        "nesbot/carbon": "^2.16"
+        "nesbot/carbon": "^1.0"
     },
     "authors": [
         {
