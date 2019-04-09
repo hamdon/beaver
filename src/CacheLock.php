@@ -19,7 +19,7 @@ class CacheLock
     public static function create($cacheDriver = 'redis')
     {
         if (self::$obj == null || $cacheDriver != self::$cacheDriver) {
-            self::$obj = new CacheLockService($cacheDriver);
+            self::$obj = new CacheLock($cacheDriver);
         }
         self::$cacheDriver = $cacheDriver;
         return self::$obj;
