@@ -63,9 +63,67 @@ Hamdon\Beaver\InputFilter::isDateDay(20);
 
 generate image thumb
 ```
+    //生成缩略图
     $image = 'http://www.heliwebs.com/file/20190110/aaaa.png';
     $wh = getimagesize($image);
     $w = $wh[0] ?? 250;
     $h = $wh[1] ?? 500;
     $thumbnail = Hamdon\Beaver\ImageService::create()->thumb($image, intval($w / 3), intval($h / 3));
+    
+    //图片转base64
+    $aa = '/file/20190410/aaa.png';
+    $base64 = Hamdon\Beaver\ImageService::create()->base64EncodeImage($aa);
+    
+```
+
+#CurlService
+Hamdon\Beaver\CurlService::create()->get('http://www.heliwebs.com',["a"=>1])
+
+Hamdon\Beaver\CurlService::create()->realGet('http://www.heliwebs.com')
+
+Hamdon\Beaver\CurlService::create()->post('http://www.heliwebs.com',["a"=>1])
+
+Hamdon\Beaver\CurlService::create()->realPost('http://www.heliwebs.com',["a"=>1])
+
+Hamdon\Beaver\CurlService::create()->postJson('http://www.heliwebs.com',["a"=>1])
+
+Hamdon\Beaver\CurlService::create()->curlUpload('http://www.heliwebs.com',["a"=>1],['/file/20190410/aaa.png','/file/20190410/bbbb.png'])
+
+#SpreadQrService
+```
+$fontColor = 'rgba(0,0,0,1)';
+$color = substr($fontColor,5,-1);
+$wantColor = explode(',',$color);
+$fontFile = public_path('images/bank_template/ztgjkai.ttf');
+$qrPreviewSrc = 'images/spread_qr_product_preview';
+$logoImg = '/file/20190410/aaa.png';
+$textOne = 'aaaaa';
+$textTwo = 'bbbbb';
+$spreadSrc = SpreadQrService::create()->setFontSize($font_size)
+            ->setTextColorR($wantColor[0])
+            ->setTextColorG($wantColor[1])
+            ->setTextColorB($wantColor[2])
+            ->setTextColorA($wantColor[3])
+            ->setTextOne($textOne)
+            ->setTextTwo($textTwo)
+            ->setFontPositionY($font_position_y)
+            ->setFontPositionX($font_position_x)
+            ->setTextLineNumber($text_line_number)
+            ->setFontNextLineDistance($font_next_line_distance)
+            ->setQrAllWidth($qr_width)
+            ->setQrPositionX($qr_position_x)
+            ->setQrPositionY($qr_position_y)
+            ->setLogoImage($logoImg)
+            ->setLogoWidth($logo_width)
+            ->setLogoPositionX($logo_position_x)
+            ->setLogoPositionY($logo_position_y)
+            ->setWxIsRound(0)
+            ->setWxImage('images/bank_template/wx.jpg')
+            ->setWxAllWidth($wx_width)
+            ->setWxPositionX($wx_position_x)
+            ->setWxPositionY($wx_position_y)
+            ->setBgImgSrc($bg_img_src)
+            ->setQrImgFileName($qr_preview_src)
+            ->composeQrImg();
+
 ```
