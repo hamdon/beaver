@@ -77,6 +77,7 @@ generate image thumb
 ```
 
 #CurlService
+
 Hamdon\Beaver\CurlService::create()->get('http://www.heliwebs.com',["a"=>1])
 
 Hamdon\Beaver\CurlService::create()->realGet('http://www.heliwebs.com')
@@ -89,7 +90,9 @@ Hamdon\Beaver\CurlService::create()->postJson('http://www.heliwebs.com',["a"=>1]
 
 Hamdon\Beaver\CurlService::create()->curlUpload('http://www.heliwebs.com',["a"=>1],['/file/20190410/aaa.png','/file/20190410/bbbb.png'])
 
+
 #SpreadQrService
+
 ```
 $fontColor = 'rgba(0,0,0,1)';
 $color = substr($fontColor,5,-1);
