@@ -1,7 +1,8 @@
 # beaver
 some useful class for laravel
 
-# CacheLock：
+# CacheLock
+
 lock function :  \Hamdon\Beaver\CacheLock::lock('lock_name', 1);
 
 unlock function : \Hamdon\Beaver\CacheLock::unLock('lock_name');
@@ -12,7 +13,8 @@ setDriver function : \Hamdon\Beaver\CacheLock::setDriver('redis');
 
 setDriver parameter : apc、array、database、file、memcached、redis
 
-# InputFilter：
+# InputFilter
+
 Hamdon\Beaver\InputFilter::isId(111);
 
 Hamdon\Beaver\InputFilter::isTrue(1==1,'your tips');
@@ -59,7 +61,7 @@ Hamdon\Beaver\InputFilter::isEmail('cao4141@qq.com');
 
 Hamdon\Beaver\InputFilter::isDateDay(20);
 
-# ImageService：
+# ImageService
 
 generate image thumb
 ```
@@ -76,7 +78,7 @@ generate image thumb
     
 ```
 
-#CurlService
+# CurlService
 
 Hamdon\Beaver\CurlService::create()->get('http://www.heliwebs.com',["a"=>1])
 
@@ -91,7 +93,7 @@ Hamdon\Beaver\CurlService::create()->postJson('http://www.heliwebs.com',["a"=>1]
 Hamdon\Beaver\CurlService::create()->curlUpload('http://www.heliwebs.com',["a"=>1],['/file/20190410/aaa.png','/file/20190410/bbbb.png'])
 
 
-#SpreadQrService
+# SpreadQrService
 
 ```
 $fontColor = 'rgba(0,0,0,1)';
