@@ -5,7 +5,7 @@
     "type": "library",
     "require": {
         "nesbot/carbon": "^1.0",
-		"predis/predis": "^0.7",
+		"predis/predis": "^0.7"
     },
     "authors": [
         {
