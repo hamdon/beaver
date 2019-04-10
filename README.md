@@ -59,3 +59,13 @@ Hamdon\Beaver\InputFilter::isEmail('cao4141@qq.com');
 
 Hamdon\Beaver\InputFilter::isDateDay(20);
 
+# ImageService：
+
+generate image thumb
+```
+    $image = 'http://www.heliwebs.com/file/20190110/aaaa.png';
+    $wh = getimagesize($image);
+    $w = $wh[0] ?? 250;
+    $h = $wh[1] ?? 500;
+    $thumbnail = Hamdon\Beaver\ImageService::create()->thumb($image, intval($w / 3), intval($h / 3));
+```
