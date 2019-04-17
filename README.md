@@ -132,3 +132,16 @@ $spreadSrc = SpreadQrService::create()->setFontSize($font_size)
             ->composeQrImg();
 
 ```
+
+# NumberService
+
+```
+//格式化阅读数
+
+Hamdon\Beaver\NumberService::create()->formatViewNumber(111111);
+
+//格式化时间戳
+
+Hamdon\Beaver\NumberService::create()->formatCreatedTime(1555487954);
+
+```
