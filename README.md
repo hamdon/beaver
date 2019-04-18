@@ -145,3 +145,74 @@ Hamdon\Beaver\NumberService::create()->formatViewNumber(111111);
 Hamdon\Beaver\NumberService::create()->formatCreatedTime(1555487954);
 
 ```
+
+# XmlService
+
+```
+//格式化阅读数
+
+Hamdon\Beaver\XmlService::create()->arrayToXml(['a'=>1]);
+
+//格式化时间戳
+
+Hamdon\Beaver\XmlService::create()->xmlToArray('
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Edited by XMLSpy® -->
+<note>
+	<to>Tove</to>
+	<from>Jani</from>
+	<heading>Reminder</heading>
+	<body>Don't forget me this weekend!</body>
+</note>
+');
+
+```
+
+# ZipFileService
+
+
+```
+        $dfile =  tempnam('/tmp', 'tmp');//产生一个临时文件，用于缓存下载文件
+        $zip = Hamdon\Beaver\ZipFileService::create();
+        //----------------------
+        $filename = 'my.zip'; //下载的默认文件名
+
+        //以下是需要下载的图片数组信息，将需要下载的图片信息转化为类似即可
+        $image = array(
+            array('image_src' => 'aaa.png', 'image_name' => mb_convert_encoding('id_card_positive','UTF-8'), 1)),
+            array('image_src' => 'bbb.png', 'image_name' => mb_convert_encoding('id_card_back','UTF-8'), 1)),
+            array('image_src' => 'ccc.png', 'image_name' => mb_convert_encoding('bank_card_positive','UTF-8'), 1)),
+            array('image_src' => 'ddd.png', 'image_name' => mb_convert_encoding('bank_card_back','UTF-8'), 1)),
+            array('image_src' => 'eee.png', 'image_name' => mb_convert_encoding('id_card_hand_in','UTF-8'), 1)),
+        );
+
+        foreach($image as $v){
+            $zip->add_file(file_get_contents($v['image_src']),  $v['image_name']);
+            // 添加打包的图片，第一个参数是图片内容，第二个参数是压缩包里面的显示的名称, 可包含路径
+            // 或是想打包整个目录 用 $zip->add_path($image_path);
+        }
+        //----------------------
+        $zip->output($dfile);
+
+        // 下载文件
+        ob_clean();
+        header('Pragma: public');
+        header('Last-Modified:'.gmdate('D, d M Y H:i:s') . 'GMT');
+        header('Cache-Control:no-store, no-cache, must-revalidate');
+        header('Cache-Control:pre-check=0, post-check=0, max-age=0');
+        header('Content-Transfer-Encoding:binary');
+        header('Content-Encoding:none');
+        header('Content-type:multipart/form-data');
+        header('Content-Disposition:attachment; filename="'.$filename.'"'); //设置下载的默认文件名
+        header('Content-length:'. filesize($dfile));
+        $fp = fopen($dfile, 'r');
+        while(connection_status() == 0 && $buf = @fread($fp, 8192)){
+            echo $buf;
+        }
+        fclose($fp);
+        @unlink($dfile);
+        @flush();
+        @ob_flush();
+        exit();
+        
+```
