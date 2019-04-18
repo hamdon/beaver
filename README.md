@@ -149,11 +149,11 @@ Hamdon\Beaver\NumberService::create()->formatCreatedTime(1555487954);
 # XmlService
 
 ```
-//格式化阅读数
+//数组转XML
 
 Hamdon\Beaver\XmlService::create()->arrayToXml(['a'=>1]);
 
-//格式化时间戳
+//将XML转为array
 
 Hamdon\Beaver\XmlService::create()->xmlToArray('
 <?xml version="1.0" encoding="ISO-8859-1"?>
