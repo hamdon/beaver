@@ -225,5 +225,5 @@ $key = 'aaaaaaaa';
 //DES 加密
 $desStr = Hamdon\Beaver\Crypto\DESService::create()->encrypt($str,$key);
 //DES 解密
-Hamdon\Beaver\Crypto\DESService::create()->decrypt($desStr,$key);
+$newStr = Hamdon\Beaver\Crypto\DESService::create()->decrypt($desStr,$key);
 ```
