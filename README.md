@@ -220,10 +220,22 @@ Hamdon\Beaver\XmlService::create()->xmlToArray('
 # 加密解密系列
 
 ```
+////DES
 $str = 'test';
 $key = 'aaaaaaaa';
 //DES 加密
 $desStr = Hamdon\Beaver\Crypto\DESService::create()->encrypt($str,$key);
 //DES 解密
 $newStr = Hamdon\Beaver\Crypto\DESService::create()->decrypt($desStr,$key);
+
+////RSA
+$privatePemFile = '/aaa/bbb/ccc/ddd/private_pkcs8_key.pem';
+$publicPemFile = '/aaa/bbb/ccc/ddd/public_key.pem';
+$willSignStr = 'bbbbbbb';
+$sha256SourceSignString = hash("sha256", $willSignStr);
+//RSA加密
+$encrypStr = Hamdon\Beaver\Crypto\RSAService::create()->encryptByPrivateKey($sha256SourceSignString,$privatePemFile);
+//RSA解密
+$decryptStr = Hamdon\Beaver\Crypto\RSAService::create()->decryptByPublicKey($encrypStr,$publicPemFile);
+
 ```
