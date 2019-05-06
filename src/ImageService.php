@@ -46,16 +46,20 @@ class ImageService
         //获取文件的后缀
         $ext = strtolower(strrchr($sourceImg, '.'));
         $paths = parse_url($sourceImg);
+        $fileType = exif_imagetype(public_path($paths['path']));
         //判断文件格式
-        switch ($ext) {
-            case '.jpg':
-                $type = 'jpeg';
-                break;
-            case '.gif':
+        switch ($fileType) {
+            case 1:
                 $type = 'gif';
                 break;
-            case '.png':
+            case 2:
+                $type = 'jpeg';
+                break;
+            case 3:
                 $type = 'png';
+                break;
+            case 6:
+                $type = 'bmp';
                 break;
             default:
                 $this->error = '文件格式不正确';
