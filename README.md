@@ -64,6 +64,19 @@ Hamdon\Beaver\InputFilter::isDateDay(20);
 # ImageService
 
 generate image thumb
+
+要安装exif扩展
+
+可以进到源文件目录
+
+```
+#cd ext/exif
+#/usr/local/php/bin/phpize
+#./configure --with-php-config=/usr/local/php/bin/php-config
+#php --ini
+#vim exif.ini
+#extension=exif.so
+```
 ```
     //生成缩略图
     $image = 'http://www.heliwebs.com/file/20190110/aaaa.png';
