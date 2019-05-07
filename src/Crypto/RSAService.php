@@ -16,7 +16,7 @@ class RSAService
     public static function create()
     {
         if (self::$obj == null) {
-            self::$obj = new DESService();
+            self::$obj = new RSAService();
         }
         return self::$obj;
     }
