@@ -73,6 +73,7 @@ generate image thumb
 #cd ext/exif
 #/usr/local/php/bin/phpize
 #./configure --with-php-config=/usr/local/php/bin/php-config
+#make && make install
 #php --ini
 #vim exif.ini
 #extension=exif.so
