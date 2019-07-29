@@ -483,4 +483,20 @@ class InputFilter
         }
         return true;
     }
+
+    /**
+     * 判断是否全是数字
+     *
+     * @param $str
+     * @param string $msg
+     * @return bool
+     * @throws ControllerException
+     */
+    public static function isAllNumber($str, $msg = '不是全数字'){
+        $pattern = '/^\d+(\d+)?$/';
+        if(!preg_match($pattern,$str)){
+            throw new ControllerException($msg);
+        }
+        return true;
+    }
 }
