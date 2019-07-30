@@ -443,8 +443,8 @@ class InputFilter
      */
     public static function isDate($date, $msg = '日期格式有误')
     {
-        $is_date = strtotime($date)?strtotime($date):false;
-        if($is_date != false){
+        $is_date = strtotime($date) ? strtotime($date) : false;
+        if ($is_date != false) {
             return true;
         }
         throw new ControllerException($msg);
@@ -492,10 +492,56 @@ class InputFilter
      * @return bool
      * @throws ControllerException
      */
-    public static function isAllNumber($str, $msg = '不是全数字'){
+    public static function isAllNumber($str, $msg = '不是全数字')
+    {
         $pattern = '/^\d+(\d+)?$/';
-        if(!preg_match($pattern,$str)){
+        if (!preg_match($pattern, $str)) {
             throw new ControllerException($msg);
+        }
+        return true;
+    }
+
+    /**
+     * 判断是不是中国移动手机号码
+     *
+     * @param $str
+     * @return bool
+     */
+    public function isChinaMobile($str)
+    {
+        $pattern = '/^134[0-8]\\d{7}$|^(?:13[5-9]|147|15[0-27-9]|178|1703|1705|1706|18[2-478])\\d{7,8}$/';
+        if (!preg_match($pattern, $str)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 判断是不是中国联通手机号码
+     *
+     * @param $str
+     * @return bool
+     */
+    public function isChinaUniom($str)
+    {
+        $pattern = '/^(?:13[0-2]|145|15[56]|176|1704|1707|1708|1709|171|18[56])\\d{7,8}|$/';
+        if (!preg_match($pattern, $str)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 判断是不是中国电信手机号码
+     *
+     * @param $str
+     * @return bool
+     */
+    public function isChinaTelcom($str)
+    {
+        $pattern = '/^(?:13[0-2]|145|15[56]|176|1704|1707|1708|1709|171|18[56])\\d{7,8}|$/';
+        if (!preg_match($pattern, $str)) {
+            return false;
         }
         return true;
     }
