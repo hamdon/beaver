@@ -274,13 +274,13 @@ class SpreadQrService
         $bg = null;
         $fileType = exif_imagetype(public_path($paths['path']));
         switch ($fileType) {
-            case '1':
+            case 1:
                 $bg = imagecreatefromgif(public_path($paths['path']));
                 break;
-            case '2':
+            case 2:
                 $bg = imagecreatefromjpeg(public_path($paths['path']));
                 break;
-            case '6':
+            case 6:
                 $bg = imagecreatefromwbmp(public_path($paths['path']));
                 break;
             case 3:
