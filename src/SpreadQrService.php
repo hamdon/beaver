@@ -270,41 +270,37 @@ class SpreadQrService
         if (empty($this->bgImgSrc)) {
             return '';
         }
-        $bgImgExt = strtolower(pathinfo($this->bgImgSrc, PATHINFO_EXTENSION));
         $paths = parse_url($this->bgImgSrc);
         $bg = null;
-
-        switch ($bgImgExt) {
-            case 'gif':
+        $fileType = exif_imagetype(public_path($paths['path']));
+        switch ($fileType) {
+            case '1':
                 $bg = imagecreatefromgif(public_path($paths['path']));
                 break;
-            case 'jpg':
-            case 'jpeg':
+            case '2':
                 $bg = imagecreatefromjpeg(public_path($paths['path']));
                 break;
-            case 'bmp':
+            case '6':
                 $bg = imagecreatefromwbmp(public_path($paths['path']));
                 break;
-            case 'png':
+            case 3:
                 $bg = imagecreatefrompng(public_path($paths['path']));
                 break;
         }
-
-        $imgExt = strtolower((@end(explode(".", $this->qrSrc))));
         $paths = parse_url($this->qrSrc);
+        $imgExt = exif_imagetype(public_path($paths['path']));
         $qrCode = null;
         switch ($imgExt) {
-            case 'gif':
+            case 1:
                 $qrCode = imagecreatefromgif(public_path($paths['path']));
                 break;
-            case 'jpg':
-            case 'jpeg':
+            case 2:
                 $qrCode = imagecreatefromjpeg(public_path($paths['path']));
                 break;
-            case 'bmp':
+            case 6:
                 $qrCode = imagecreatefromwbmp(public_path($paths['path']));
                 break;
-            case 'png':
+            case 3:
                 $qrCode = imagecreatefrompng(public_path($paths['path']));
                 break;
         }
@@ -325,19 +321,18 @@ class SpreadQrService
         //合成logo
         if($this->logoWidth>0) {
             $logoSrc = null;
-            $logoImgExt = strtolower((@end(explode(".", $this->logoSrc))));
+            $logoImgExt = exif_imagetype(public_path($this->logoSrc));
             switch ($logoImgExt) {
-                case 'gif':
+                case 1:
                     $logoSrc = imagecreatefromgif(public_path($this->logoSrc));
                     break;
-                case 'jpg':
-                case 'jpeg':
+                case 2:
                     $logoSrc = imagecreatefromjpeg(public_path($this->logoSrc));
                     break;
-                case 'bmp':
+                case 6:
                     $logoSrc = imagecreatefromwbmp(public_path($this->logoSrc));
                     break;
-                case 'png':
+                case 3:
                     $logoSrc = imagecreatefrompng(public_path($this->logoSrc));
                     break;
             }
@@ -388,8 +383,8 @@ class SpreadQrService
         } else {
             $spreadQrPreviewName = $this->qrImgFileName;
         }
-        switch ($bgImgExt) {
-            case 'gif':
+        switch ($fileType) {
+            case 1:
                 if ($this->qrImgFileName == '') {
                     rename($spreadQrPreviewName, $spreadQrPreviewName .= '.gif');
                 } else {
@@ -397,8 +392,7 @@ class SpreadQrService
                 }
                 imagegif($bg, public_path($spreadQrPreviewName));
                 break;
-            case 'jpg':
-            case 'jpeg':
+            case 2:
                 if ($this->qrImgFileName == '') {
                     rename($spreadQrPreviewName, $spreadQrPreviewName .= '.jpg');
                 } else {
@@ -406,7 +400,7 @@ class SpreadQrService
                 }
                 imagejpeg($bg, public_path($spreadQrPreviewName));
                 break;
-            case 'bmp':
+            case 6:
                 if ($this->qrImgFileName == '') {
                     rename($spreadQrPreviewName, $spreadQrPreviewName .= '.jpg');
                 } else {
@@ -414,7 +408,7 @@ class SpreadQrService
                 }
                 imagejpeg($bg, public_path($spreadQrPreviewName));
                 break;
-            case 'png':
+            case 3:
                 if ($this->qrImgFileName == '') {
                     rename($spreadQrPreviewName, $spreadQrPreviewName .= '.png');
                 } else {
@@ -431,14 +425,20 @@ class SpreadQrService
     }
 
     private function yuanImg($imgPath, $isRound = 1, $headerImgW = 0, $headerImgH = 0) {
-        $ext     = pathinfo($imgPath);
         $src_img = null;
-        switch ($ext['extension']) {
-            case 'jpg':
+        $extension = exif_imagetype($imgPath);
+        switch ($extension) {
+            case 1:
+                $src_img = imagecreatefromgif($imgPath);
+                break;
+            case 2:
                 $src_img = imagecreatefromjpeg($imgPath);
                 break;
-            case 'png':
+            case 3:
                 $src_img = imagecreatefrompng($imgPath);
+                break;
+            case 6:
+                $src_img = imagecreatefromwbmp($imgPath);
                 break;
         }
         if(!$isRound){
