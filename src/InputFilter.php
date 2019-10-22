@@ -545,4 +545,22 @@ class InputFilter
         }
         return true;
     }
+
+    /**
+     * 判断是不是联系电话验证（手机和固话）
+     *
+     * @param $str
+     * @param string $msg
+     * @return bool
+     * @throws ControllerException
+     */
+    public function isTelAndMob($str, $msg = '联系电话有误')
+    {
+        $isMob = "/^1[3-5,8]{1}[0-9]{9}$/";
+        $isTel = "/^([0-9]{3,4}-)?[0-9]{7,8}$/";
+        if (!preg_match($isMob, $str) && !preg_match($isTel, $str)) {
+            throw new ControllerException($msg);
+        }
+        return true;
+    }
 }
