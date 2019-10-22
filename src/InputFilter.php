@@ -23,7 +23,7 @@ class InputFilter
      */
     public static function isId($id, $message = 'id有误')
     {
-        if (empty($id) || !is_numeric($id)) {
+        if (empty($id) || !is_numeric($id) || $id < 0) {
             throw new ControllerException($message);
         }
     }
