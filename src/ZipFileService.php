@@ -20,7 +20,7 @@ class ZipFileService
     public static function create()
     {
         if (self::$obj == null) {
-            self::$obj = new XmlService();
+            self::$obj = new ZipFileService();
         }
         return self::$obj;
     }
