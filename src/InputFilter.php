@@ -563,4 +563,21 @@ class InputFilter
         }
         return true;
     }
+
+    /**
+     * 判断是不是统一社会信用代码
+     *
+     * @param $str
+     * @param string $msg
+     * @return bool
+     * @throws ControllerException
+     */
+    public function isUniformSocialCreditCode($str, $msg='统一社会信用代码有误')
+    {
+        $pattern = '/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/';
+        if (preg_match($pattern, $str)) {
+            return true;
+        }
+        throw new ControllerException($msg);
+    }
 }
