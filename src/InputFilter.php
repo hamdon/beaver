@@ -507,7 +507,7 @@ class InputFilter
      * @param $str
      * @return bool
      */
-    public function isChinaMobile($str)
+    public static function isChinaMobile($str)
     {
         $pattern = '/^134[0-8]\\d{7}$|^(?:13[5-9]|147|15[0-27-9]|178|1703|1705|1706|18[2-478])\\d{7,8}$/';
         if (!preg_match($pattern, $str)) {
@@ -522,7 +522,7 @@ class InputFilter
      * @param $str
      * @return bool
      */
-    public function isChinaUniom($str)
+    public static function isChinaUniom($str)
     {
         $pattern = '/^(?:13[0-2]|145|15[56]|176|1704|1707|1708|1709|171|18[56])\\d{7,8}|$/';
         if (!preg_match($pattern, $str)) {
@@ -537,7 +537,7 @@ class InputFilter
      * @param $str
      * @return bool
      */
-    public function isChinaTelcom($str)
+    public static function isChinaTelcom($str)
     {
         $pattern = '/^(?:13[0-2]|145|15[56]|176|1704|1707|1708|1709|171|18[56])\\d{7,8}|$/';
         if (!preg_match($pattern, $str)) {
@@ -554,7 +554,7 @@ class InputFilter
      * @return bool
      * @throws ControllerException
      */
-    public function isTelAndMob($str, $msg = '联系电话有误')
+    public static function isTelAndMob($str, $msg = '联系电话有误')
     {
         $isMob = "/^1[3-5,8]{1}[0-9]{9}$/";
         $isTel = "/^([0-9]{3,4}-)?[0-9]{7,8}$/";
@@ -572,7 +572,7 @@ class InputFilter
      * @return bool
      * @throws ControllerException
      */
-    public function isUniformSocialCreditCode($str, $msg='统一社会信用代码有误')
+    public static function isUniformSocialCreditCode($str, $msg='统一社会信用代码有误')
     {
         $pattern = '/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/';
         if (preg_match($pattern, $str)) {
