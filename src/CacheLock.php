@@ -102,7 +102,7 @@ class CacheLock
         $data = [];
         if (self::$cacheDriver == 'redis') {
             $redis = \Cache::getRedis();
-            $keys = $redis->keys("*$key_name*");
+            $keys = $redis->keys("*$name*");
             foreach ($keys as $key) {
                 $data[] = $redis->get($key);
             }
@@ -124,5 +124,25 @@ class CacheLock
                 $redis->del($key);
             }
         }
+    }
+
+    /**
+     * 锁并检查是否已经加锁 （返回：false,没有锁；返回：true,已加锁）
+     *
+     * @param $lockName
+     * @param $second
+     * @return bool
+     */
+    public function lockAndCheck($lockName, $second)
+    {
+        $result = false;
+        if (self::$cacheDriver == 'redis') {
+            if (!self::check($lockName)) {
+                self::lock($lockName, $second);
+                return false;
+            }
+            return true;
+        }
+        return $result;
     }
 }
