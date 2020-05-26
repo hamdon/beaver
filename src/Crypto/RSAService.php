@@ -31,9 +31,9 @@ class RSAService
      */
     public static function encryptByPrivateKey($data, $privatePemFile, $isBase64 = 1)
     {
-        $pi_key = openssl_pkey_get_private(file_get_contents($privatePemFile));//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
+        $piKey = openssl_pkey_get_private(file_get_contents($privatePemFile));//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
         $encrypted = "";
-        openssl_private_encrypt($data, $encrypted, $pi_key, OPENSSL_PKCS1_PADDING);//私钥加密
+        openssl_private_encrypt($data, $encrypted, $piKey, OPENSSL_PKCS1_PADDING);//私钥加密
         if ($isBase64) {
 
         }
@@ -73,8 +73,8 @@ class RSAService
         if ($isBase64 == 1) {
             $data = base64_decode($data);
         }
-        $pu_key = openssl_pkey_get_public(file_get_contents($publicPemFile));//这个函数可用来判断公钥是否是可用的，可用返回资源id Resource id
-        openssl_public_decrypt($data, $decrypted, $pu_key, OPENSSL_PKCS1_PADDING);//公钥解密
+        $puKey = openssl_pkey_get_public(file_get_contents($publicPemFile));//这个函数可用来判断公钥是否是可用的，可用返回资源id Resource id
+        openssl_public_decrypt($data, $decrypted, $puKey, OPENSSL_PKCS1_PADDING);//公钥解密
         return $decrypted;
     }
 
