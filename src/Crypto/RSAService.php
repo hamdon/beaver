@@ -50,11 +50,11 @@ class RSAService
      */
     public static function encryptByPrivateKeyContent($data, $privatePemContent, $isBase64 = 1)
     {
-        if(strpos('-----BEGIN PUBLIC KEY-----',$privatePemContent) === false) {
+        if(strpos('-----BEGIN RSA PRIVATE KEY-----',$privatePemContent) === false) {
             $privatePemContent = '
------BEGIN PUBLIC KEY-----
+-----BEGIN RSA PRIVATE KEY-----
 ' . $privatePemContent . '
------END PUBLIC KEY-----
+-----END RSA PRIVATE KEY-----
 ';
         }
         $piKey = openssl_pkey_get_private($privatePemContent);//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
@@ -189,11 +189,11 @@ class RSAService
         if ($isBase64 == 1) {
             $data = base64_decode($data);
         }
-        if(strpos('-----BEGIN PUBLIC KEY-----',$privatePemContent) === false) {
+        if(strpos('-----BEGIN RSA PRIVATE KEY-----',$privatePemContent) === false) {
             $privatePemContent = '
------BEGIN PUBLIC KEY-----
+-----BEGIN RSA PRIVATE KEY-----
 ' . $privatePemContent . '
------END PUBLIC KEY-----
+-----END RSA PRIVATE KEY-----
 ';
         }
         $res = openssl_pkey_get_private($privatePemContent);//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
