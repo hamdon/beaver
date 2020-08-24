@@ -51,4 +51,18 @@ class NumberService
         }
         return $timeFormat;
     }
+
+    /**
+     * 产品手续费向下取整
+     *
+     * @param $fee
+     * @param $digits
+     * @return string
+     */
+    public function productFee($fee, $digits)
+    {
+        $powValue = pow(10, $digits);
+        $willFee = ceil($fee * $powValue);
+        return sprintf('%.' . $digits . 'f', $willFee / $powValue);
+    }
 }
