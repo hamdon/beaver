@@ -51,6 +51,10 @@ class RSAService
     public static function encryptByPrivateKeyContent($data, $privatePemContent, $isBase64 = 1)
     {
         if(strpos('-----BEGIN RSA PRIVATE KEY-----',$privatePemContent) === false) {
+            if(strpos($privatePemContent, "\n") === false){
+                $privatePemContent = chunk_split($privatePemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $privatePemContent = trim($privatePemContent, "\n");
+            }
             $privatePemContent = '
 -----BEGIN RSA PRIVATE KEY-----
 ' . $privatePemContent . '
@@ -66,6 +70,36 @@ class RSAService
         return base64_encode($encrypted);//加密后的内容通常含有特殊字符，需要编码转换下，在网络间通过url传输时要注意base64编码是否是url安全的
     }
 
+    /**
+     * 私钥内容加密-新
+     *
+     * @param $data
+     * @param $privatePemContent
+     * @param int $isBase64
+     * @return string
+     */
+    public static function encryptByPrivateKeyContentNew($data, $privatePemContent, $isBase64 = 1)
+    {
+        if(strpos('-----BEGIN RSA PRIVATE KEY-----',$privatePemContent) === false) {
+            $privatePemContent = chunk_split($privatePemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+            if(strpos($privatePemContent, "\n") === false){
+                $privatePemContent = chunk_split($privatePemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $privatePemContent = trim($privatePemContent, "\n");
+            }
+            $privatePemContent = '
+-----BEGIN RSA PRIVATE KEY-----
+' . $privatePemContent . '
+-----END RSA PRIVATE KEY-----
+';
+        }
+        $piKey = openssl_pkey_get_private($privatePemContent);//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
+        $encrypted = "";
+        openssl_private_encrypt($data, $encrypted, $piKey, OPENSSL_PKCS1_PADDING);//私钥加密
+        if ($isBase64) {
+
+        }
+        return base64_encode($encrypted);//加密后的内容通常含有特殊字符，需要编码转换下，在网络间通过url传输时要注意base64编码是否是url安全的
+    }
     /**
      * 公钥加密
      *
@@ -95,7 +129,11 @@ class RSAService
      */
     public static function encryptByPublicKeyContent($data, $publicPemContent, $isBase64 = 1)
     {
-        if(strpos('-----BEGIN PUBLIC KEY-----',$publicPemContent) === false) {
+        if (strpos('-----BEGIN PUBLIC KEY-----', $publicPemContent) === false) {
+            if(strpos($publicPemContent, "\n") === false){
+                $publicPemContent = chunk_split($publicPemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $publicPemContent = trim($publicPemContent, "\n");
+            }
             $publicPemContent = '
 -----BEGIN PUBLIC KEY-----
 ' . $publicPemContent . '
@@ -105,6 +143,47 @@ class RSAService
         $outVal = '';
         $res = openssl_pkey_get_public($publicPemContent);
         openssl_public_encrypt($data, $outVal, $res);
+        if ($isBase64 == 1) {
+            $outVal = base64_encode($outVal);
+        }
+        return $outVal;
+    }
+
+    /**
+     * 公钥内容加密-新
+     *
+     * @param $data
+     * @param $publicPemContent
+     * @param int $isBase64
+     * @return string
+     */
+    public static function encryptByPublicKeyContentNew($data, $publicPemContent, $isBase64 = 1,$splitSize = 0)
+    {
+        if(strpos('-----BEGIN PUBLIC KEY-----',$publicPemContent) === false) {
+            if(strpos($publicPemContent, "\n") === false){
+                $publicPemContent = chunk_split($publicPemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $publicPemContent = trim($publicPemContent, "\n");
+            }
+            $publicPemContent = '
+-----BEGIN PUBLIC KEY-----
+' . $publicPemContent . '
+-----END PUBLIC KEY-----
+';
+        }
+        $outVal = '';
+        $res = openssl_pkey_get_public($publicPemContent);
+        if($splitSize > 0){
+            $decrypted = array();
+            $dataArray = str_split($data, $splitSize);
+            foreach($dataArray as $subData){
+                $subDecrypted = null;
+                openssl_public_encrypt($subData, $subDecrypted, $res);
+                $decrypted[] = $subDecrypted;
+            }
+            $outVal = implode('',$decrypted);
+        }else{
+            openssl_public_encrypt($data, $outVal, $res);
+        }
         if ($isBase64 == 1) {
             $outVal = base64_encode($outVal);
         }
@@ -145,6 +224,10 @@ class RSAService
             $data = base64_decode($data);
         }
         if(strpos('-----BEGIN PUBLIC KEY-----',$publicPemContent) === false) {
+            if(strpos($publicPemContent, "\n") === false){
+                $publicPemContent = chunk_split($publicPemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $publicPemContent = trim($publicPemContent, "\n");
+            }
             $publicPemContent = '
 -----BEGIN PUBLIC KEY-----
 ' . $publicPemContent . '
@@ -156,6 +239,35 @@ class RSAService
         return $decrypted;
     }
 
+    /**
+     * 公钥内容解密-新
+     *
+     * @param $data
+     * @param $publicPemContent
+     * @param int $isBase64
+     * @return string
+     */
+    public static function decryptByPublicKeyContentNew($data, $publicPemContent, $isBase64 = 1)
+    {
+        $decrypted = "";
+        if ($isBase64 == 1) {
+            $data = base64_decode($data);
+        }
+        if(strpos('-----BEGIN PUBLIC KEY-----',$publicPemContent) === false) {
+            if(strpos($publicPemContent, "\n") === false){
+                $publicPemContent = chunk_split($publicPemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $publicPemContent = trim($publicPemContent, "\n");
+            }
+            $publicPemContent = '
+-----BEGIN PUBLIC KEY-----
+' . $publicPemContent . '
+-----END PUBLIC KEY-----
+';
+        }
+        $puKey = openssl_pkey_get_public($publicPemContent);//这个函数可用来判断公钥是否是可用的，可用返回资源id Resource id
+        openssl_public_decrypt($data, $decrypted, $puKey, OPENSSL_PKCS1_PADDING);//公钥解密
+        return $decrypted;
+    }
     /**
      * 私钥解密
      *
@@ -190,6 +302,40 @@ class RSAService
             $data = base64_decode($data);
         }
         if(strpos('-----BEGIN RSA PRIVATE KEY-----',$privatePemContent) === false) {
+            if(strpos($privatePemContent, "\n") === false){
+                $privatePemContent = chunk_split($privatePemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $privatePemContent = trim($privatePemContent, "\n");
+            }
+            $privatePemContent = '
+-----BEGIN RSA PRIVATE KEY-----
+' . $privatePemContent . '
+-----END RSA PRIVATE KEY-----
+';
+        }
+        $res = openssl_pkey_get_private($privatePemContent);//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
+        openssl_private_decrypt($data, $outVal, $res);
+        return $outVal;
+    }
+
+    /**
+     * 私钥内容解密-新
+     *
+     * @param $data
+     * @param $privatePemContent
+     * @param int $isBase64
+     * @return string
+     */
+    public static function decryptByPrivateKeyContentNew($data, $privatePemContent, $isBase64 = 1)
+    {
+        $outVal = '';
+        if ($isBase64 == 1) {
+            $data = base64_decode($data);
+        }
+        if(strpos('-----BEGIN RSA PRIVATE KEY-----',$privatePemContent) === false) {
+            if(strpos($privatePemContent, "\n") === false){
+                $privatePemContent = chunk_split($privatePemContent, 64, PHP_EOL);//在每一个64字符后加一个\n
+                $privatePemContent = trim($privatePemContent, "\n");
+            }
             $privatePemContent = '
 -----BEGIN RSA PRIVATE KEY-----
 ' . $privatePemContent . '
@@ -217,4 +363,6 @@ class RSAService
             'pubkey' => $pubKey
         );
     }
+
+
 }
