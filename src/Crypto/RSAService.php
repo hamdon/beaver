@@ -247,7 +247,7 @@ class RSAService
      * @param int $isBase64
      * @return string
      */
-    public static function decryptByPublicKeyContentNew($data, $publicPemContent, $isBase64 = 1)
+    public static function decryptByPublicKeyContentNew($data, $publicPemContent, $isBase64 = 1,$splitSize = 0)
     {
         $decrypted = "";
         if ($isBase64 == 1) {
@@ -265,9 +265,22 @@ class RSAService
 ';
         }
         $puKey = openssl_pkey_get_public($publicPemContent);//这个函数可用来判断公钥是否是可用的，可用返回资源id Resource id
-        openssl_public_decrypt($data, $decrypted, $puKey, OPENSSL_PKCS1_PADDING);//公钥解密
+        if($splitSize > 0){
+            $sDecrypted = array();
+            $dataArray = str_split($data, $splitSize);
+            foreach($dataArray as $subData){
+                $subDecrypted = null;
+                openssl_public_encrypt($subData, $subDecrypted, $puKey);
+                openssl_public_decrypt($data, $decrypted, $puKey, OPENSSL_PKCS1_PADDING);//公钥解密
+                $sDecrypted[] = $subDecrypted;
+            }
+            $decrypted = implode('',$sDecrypted);
+        }else{
+            openssl_public_decrypt($data, $decrypted, $puKey, OPENSSL_PKCS1_PADDING);//公钥解密
+        }
         return $decrypted;
     }
+
     /**
      * 私钥解密
      *
@@ -295,7 +308,7 @@ class RSAService
      * @param int $isBase64
      * @return string
      */
-    public static function decryptByPrivateKeyContent($data, $privatePemContent, $isBase64 = 1)
+    public static function decryptByPrivateKeyContent($data, $privatePemContent, $isBase64 = 1,$splitSize=0)
     {
         $outVal = '';
         if ($isBase64 == 1) {
@@ -313,7 +326,18 @@ class RSAService
 ';
         }
         $res = openssl_pkey_get_private($privatePemContent);//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
-        openssl_private_decrypt($data, $outVal, $res);
+        if($splitSize > 0){
+            $sDecrypted = array();
+            $dataArray = str_split($data, $splitSize);
+            foreach($dataArray as $subData){
+                $subDecrypted = null;
+                openssl_private_decrypt($subData, $subDecrypted, $res);
+                $sDecrypted[] = $subDecrypted;
+            }
+            $outVal = implode('',$sDecrypted);
+        }else{
+            openssl_private_decrypt($data, $outVal, $res);
+        }
         return $outVal;
     }
 
@@ -364,5 +388,50 @@ class RSAService
         );
     }
 
+    /**
+     * pfx文件解密
+     *
+     * @param $encrypted
+     * @param $fpxFile
+     * @param string $pwd
+     * @return mixed
+     */
+    public function decryptFromPfx($encrypted, $fpxFile, $pwd='')
+    {
+        $certs = array();
+        openssl_pkcs12_read(file_get_contents($fpxFile), $certs, $pwd);
+        openssl_private_decrypt($encrypted, $decrypted, $certs['pkey']);
+        return $decrypted;
+    }
 
+    /**
+     * pem 文件加密
+     *
+     * @param $data
+     * @param $pemFile
+     * @return string
+     */
+    public function encryptFromPem($data, $pemFile)
+    {
+        $pubKey = openssl_get_publickey(file_get_contents($pemFile));
+        $encrypted = '';
+        openssl_public_encrypt($data, $encrypted, $pubKey);
+        return base64_encode($encrypted);
+    }
+
+    /**
+     * 数据签名验证 -基于pem文件
+     *
+     * @param $data
+     * @param $sign
+     * @param $pemFile
+     * @return int|resource
+     */
+    public function verifyFromPem($data, $sign, $pemFile)
+    {
+        $res = openssl_get_publickey(file_get_contents($pemFile));
+        $details = openssl_pkey_get_details($res);
+        $res = openssl_verify($data, base64_decode($sign), $details['key'], OPENSSL_ALGO_SHA1);
+        return $res;
+    }
 }
