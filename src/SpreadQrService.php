@@ -547,7 +547,7 @@ class SpreadQrService
                 break;
         }
         if ($this->qrImgFileName == '') {
-            ImageService::create()->base64EncodeImage($spreadQrPreviewName);
+            return ImageService::create()->base64EncodeImage($spreadQrPreviewName);
         } else {
             return '/' . $spreadQrPreviewName;
         }
