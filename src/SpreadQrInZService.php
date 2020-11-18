@@ -2,14 +2,13 @@
 /**
  * Created by PhpStorm.
  * User: hamdon
- * Date: 2019/4/10
- * Time: 11:10
+ * Date: 2020/11/18
+ * Time: 15:39
  */
 
 namespace Hamdon\Beaver;
 
-
-class SpreadQrService
+class SpreadQrInZService
 {
     static $obj = null;
     private $isWx = 0;
@@ -20,7 +19,7 @@ class SpreadQrService
     private $wxPositionX = 306;
     private $wxPositionY = 660;
     private $textOne = "龙.hamdon";
-    private $textTwo = "15900000000";
+    private $textTwo = "";
     private $textThree = "";
     private $textFour = "";
     private $textLineType = 0; //设置每行之间的距离模式（0：默认缺哪个补哪个；1：缺的留空，也占位置）
@@ -34,23 +33,23 @@ class SpreadQrService
     private $qrWidth = 387;
     private $qrHeight = 387;
     private $qrPositionX = 306;
-    private $qrPositionY = 660;
+    private $qrPositionY =  660;
     private $logoWidth = 0;
     private $logoPositionX = 0;
     private $logoPositionY = 0;
     private $logoSrc = "";
-    private $bgImgSrc = '';
+    private $bgImgSrc =  '';
     private $wxIsRound = 1;
     private $textContentType = 2;
     private $font_color_r = 0;
     private $font_color_g = 0;
     private $font_color_b = 0;
     private $font_color_a = 1;
-    private $sWidth = 640;
-    private $sHeight = 0;
+    private $sWidth=640;
+    private $sHeight=0;
     private $fontFile = '';
-    private $isHtmlEntities = 1;
     private $isOSS = 0;
+    private $fontWeight = 0;
 
     public static function create()
     {
@@ -63,18 +62,10 @@ class SpreadQrService
         $this->isOSS = 1;
         return $this;
     }
-
-    public function setIsHtmlEntities($status = 1)
-    {
-        $this->isHtmlEntities = $status;
-    }
-
-    public function setFontFile($file)
-    {
+    public function setFontFile($file){
         $this->fontFile = $file;
         return $this;
     }
-
     public function setLogoImage($value)
     {
         $this->logoSrc = $value;
@@ -99,49 +90,43 @@ class SpreadQrService
         return $this;
     }
 
-    public function setSWidth($sWidth = 640)
-    {
+    public function setSWidth($sWidth=640){
         $this->sWidth = $sWidth;
         return $this;
     }
 
-    public function setSHeight($sHeight = 640)
-    {
+    public function setSHeight($sHeight=640){
         $this->sHeight = $sHeight;
         return $this;
     }
 
-    public function setTextColorR($value)
-    {
+    public function setTextColorR($value){
         $this->font_color_r = $value;
         return $this;
     }
 
-    public function setTextColorG($value)
-    {
+    public function setTextColorG($value){
         $this->font_color_g = $value;
         return $this;
     }
 
-    public function setTextColorB($value)
-    {
+    public function setTextColorB($value){
         $this->font_color_b = $value;
         return $this;
     }
 
-    public function setTextColorA($value)
-    {
+    public function setTextColorA($value){
         $this->font_color_a = $value;
         return $this;
     }
 
-    public function setTextContentType($textContentType = 2)
+    public function setTextContentType($textContentType=2)
     {
         $this->textContentType = $textContentType;
         return $this;
     }
 
-    public function setWxIsRound($isRound = 1)
+    public function setWxIsRound($isRound=1)
     {
         $this->wxIsRound = $isRound;
         return $this;
@@ -158,20 +143,18 @@ class SpreadQrService
         $this->textTwo = $textTwo;
         return $this;
     }
-
     public function setTextThree($textThree)
     {
         $this->textThree = $textThree;
         return $this;
     }
-
     public function setTextFour($textFour)
     {
         $this->textFour = $textFour;
         return $this;
     }
 
-    public function setTextLineType($textLineType = 0)
+    public function setTextLineType($textLineType=0)
     {
         $this->textLineType = $textLineType;
         return $this;
@@ -213,8 +196,7 @@ class SpreadQrService
         return $this;
     }
 
-    public function setWxWidth($wxWidth)
-    {
+    public function setWxWidth($wxWidth){
         $this->isWx = 1;
         $this->wxWidth = $wxWidth;
         return $this;
@@ -249,14 +231,12 @@ class SpreadQrService
         return $this;
     }
 
-    public function setWxImage($img)
-    {
+    public function setWxImage($img){
         $this->wxImg = $img;
         return $this;
     }
 
-    public function setWxImageSource($source)
-    {
+    public function setWxImageSource($source){
         $this->wxImgSource = $source;
         return $this;
     }
@@ -302,9 +282,15 @@ class SpreadQrService
     {
         $this->qrImgFileName = $qrImgFileName;
         $fileInfos = pathinfo($qrImgFileName);
-        if (isset($fileInfos['extension'])) {
-            $this->qrImgFileName = $fileInfos['dirname'] . '/' . $fileInfos['filename'];
+        if(isset($fileInfos['extension'])){
+            $this->qrImgFileName = $fileInfos['dirname'].'/'.$fileInfos['filename'];
         }
+        return $this;
+    }
+
+    public function setFontWeight($fontWeight)
+    {
+        $this->fontWeight = $fontWeight;
         return $this;
     }
 
@@ -313,7 +299,6 @@ class SpreadQrService
         if (empty($this->bgImgSrc)) {
             return '';
         }
-        $bg = null;
         if($this->isOSS == 0){
             $paths = parse_url($this->bgImgSrc);
             $bg = null;
@@ -350,6 +335,7 @@ class SpreadQrService
                     break;
             }
         }
+
         $paths = parse_url($this->qrSrc);
         $imgExt = exif_imagetype(public_path($paths['path']));
         $qrCode = null;
@@ -382,7 +368,7 @@ class SpreadQrService
             }
         }
         //合成logo
-        if ($this->logoWidth > 0) {
+        if($this->logoWidth>0) {
             $logoSrc = null;
             $logoImgExt = exif_imagetype(public_path($this->logoSrc));
             switch ($logoImgExt) {
@@ -404,107 +390,98 @@ class SpreadQrService
 
         //增加文字
         if ($this->textLineNumber == 1) {
-            if ($this->textTwo == '') {
-                if ($this->isHtmlEntities == 1) {
-                    $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
-                } else {
-                    $one = $this->textOne;
-                }
-            } else {
-                if ($this->isHtmlEntities == 1) {
-                    $one = mb_convert_encoding($this->textOne . '  ' . $this->textTwo, 'html-entities', 'UTF-8');
-                } else {
-                    $one = $this->textOne . '  ' . $this->textTwo;
-                }
+            if($this->textTwo ==''){
+//                $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
+                $one = $this->textOne;
+            }else{
+//                $one = mb_convert_encoding($this->textOne . '  ' . $this->textTwo, 'html-entities', 'UTF-8');
+                $one = $this->textOne . '  ' . $this->textTwo;
             }
             $two = '';
             $three = '';
             $four = '';
         } else {
-            if ($this->isHtmlEntities == 1) {
-                $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
-                $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
-                $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
-                $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
-            } else {
-                $one = $this->textOne;
-                $two = $this->textTwo;
-                $three = $this->textThree;
-                $four = $this->textFour;
-            }
+//            $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
+            $one = $this->textOne;
+//            $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
+            $two = $this->textTwo;
+//            $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
+            $three = $this->textThree;
+//            $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
+            $four = $this->textFour;
         }
+
         if ($this->textContentType == 1) {
-            if ($this->isHtmlEntities == 1) {
-                $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
-                $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
-                $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
-                $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
-            } else {
-                $one = $this->textOne;
-                $two = $this->textTwo;
-                $three = $this->textThree;
-                $four = $this->textFour;
-            }
+//            $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
+            $one = $this->textOne;
+//            $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
+            $two = $this->textTwo;
+//            $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
+            $three = $this->textThree;
+//            $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
+            $four = $this->textFour;
         }
+
         $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $one);//文字水平居中实质
+
         $fontColor = imagecolorallocatealpha($bg, $this->font_color_r, $this->font_color_g, $this->font_color_b, intval((1 - $this->font_color_a) * 127));
         $width = imagesx($bg);
         if ($this->fontPositionX == 0) {
             imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY, $fontColor, $this->fontFile, $one);
             //如果需要加粗,让x坐标加1
-            imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + 1, $this->fontPositionY, $fontColor, $this->fontFile, $one);
+            imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + $this->fontWeight, $this->fontPositionY, $fontColor, $this->fontFile, $one);
         } else {
             imagettftext($bg, $this->fontSize, 0, $this->fontPositionX, $this->fontPositionY, $fontColor, $this->fontFile, $one);
             //如果需要加粗,让x坐标加1
-            imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + 1, $this->fontPositionY, $fontColor, $this->fontFile, $one);
+            imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + $this->fontWeight, $this->fontPositionY, $fontColor, $this->fontFile, $one);
         }
         $lineNumber = 0;
         if ($two != '') {
             $lineNumber++;
-            if ($this->textLineType == 1) {
+            if($this->textLineType == 1){
                 $lineNumber = 1;
             }
             $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $two);//文字水平居中实质
             if ($this->fontPositionX == 0) {
                 imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $two);
                 //如果需要加粗,让x坐标加1
-                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + 1, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $two);
+                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + $this->fontWeight, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $two);
             } else {
                 imagettftext($bg, $this->fontSize, 0, $this->fontPositionX, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $two);
                 //如果需要加粗,让x坐标加1
-                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + 1, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $two);
+                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + $this->fontWeight, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $two);
             }
         }
         if ($three != '') {
             $lineNumber++;
-            if ($this->textLineType == 1) {
+            if($this->textLineType == 1){
                 $lineNumber = 2;
             }
             $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $three);//文字水平居中实质
             if ($this->fontPositionX == 0) {
                 imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $three);
                 //如果需要加粗,让x坐标加1
-                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + 1, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $three);
+                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + $this->fontWeight, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $three);
             } else {
                 imagettftext($bg, $this->fontSize, 0, $this->fontPositionX, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $three);
                 //如果需要加粗,让x坐标加1
-                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + 1, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $three);
+                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + $this->fontWeight, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $three);
             }
         }
         if ($four != '') {
             $lineNumber++;
-            if ($this->textLineType == 1) {
+            if($this->textLineType == 1){
                 $lineNumber = 3;
             }
             $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $four);//文字水平居中实质
             if ($this->fontPositionX == 0) {
                 imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $four);
                 //如果需要加粗,让x坐标加1
-                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + 1, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $four);
+                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + $this->fontWeight, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $four);
             } else {
                 imagettftext($bg, $this->fontSize, 0, $this->fontPositionX, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $four);
                 //如果需要加粗,让x坐标加1
-                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + 1, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $four);
+                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + $this->fontWeight, $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $four);
             }
         }
         if ($this->qrImgFileName == '') {
@@ -553,8 +530,7 @@ class SpreadQrService
         }
     }
 
-    private function yuanImg($imgPath, $isRound = 1, $headerImgW = 0, $headerImgH = 0)
-    {
+    private function yuanImg($imgPath, $isRound = 1, $headerImgW = 0, $headerImgH = 0) {
         $src_img = null;
         $extension = exif_imagetype($imgPath);
         switch ($extension) {
@@ -571,21 +547,21 @@ class SpreadQrService
                 $src_img = imagecreatefromwbmp($imgPath);
                 break;
         }
-        if (!$isRound) {
+        if(!$isRound){
             return $src_img;
         }
-        $wh = getimagesize($imgPath);
-        $w = $headerImgW ?? $wh[0];
-        $h = $headerImgH ?? $wh[1];
-        $w = min($w, $h);
-        $h = $w;
+        $wh  = getimagesize($imgPath);
+        $w   = $headerImgW??$wh[0];
+        $h   = $headerImgH??$wh[1];
+        $w   = min($w, $h);
+        $h   = $w;
         $img = imagecreatetruecolor($w, $h);
         //这一句一定要有
         imagesavealpha($img, true);
         //拾取一个完全透明的颜色,最后一个参数127为全透明
         $bg = imagecolorallocatealpha($img, 255, 255, 255, 127);
         imagefill($img, 0, 0, $bg);
-        $r = $w / 2; //圆半径
+        $r   = $w / 2; //圆半径
         for ($x = 0; $x < $w; $x++) {
             for ($y = 0; $y < $h; $y++) {
                 $rgbColor = imagecolorat($src_img, $x, $y);
@@ -597,18 +573,17 @@ class SpreadQrService
         return $img;
     }
 
-    private function yuanImgBySource($source, $isRound = 1, $sWidth = 0, $sHeight = 0, $headerImgW = 0, $headerImgH = 0)
-    {
-        if (!$isRound) {
+    private function yuanImgBySource($source,$isRound = 1,$sWidth=0,$sHeight=0,$headerImgW = 0,$headerImgH = 0){
+        if (!$isRound){
             return $source;
         }
-        $w = $headerImgW ?? 640;
-        $h = $headerImgH ?? 640;
-        $sWidth = $sWidth ?? 640;
-        $sHeight = $sHeight ?? 640;
+        $w   = $headerImgW??640;
+        $h   = $headerImgH??640;
+        $sWidth = $sWidth??640;
+        $sHeight = $sHeight??640;
         //将图片等比例缩小
-        $new = imagecreatetruecolor($w, $h);
-        imagecopyresized($new, $source, 0, 0, 0, 0, $w, $h, $sWidth, $sHeight);
+        $new=imagecreatetruecolor($w, $h);
+        imagecopyresized($new, $source,0, 0,0, 0,$w, $h, $sWidth, $sHeight);
 
         $img = imagecreatetruecolor($w, $h);
         //这一句一定要有
@@ -616,7 +591,7 @@ class SpreadQrService
         //拾取一个完全透明的颜色,最后一个参数127为全透明
         $bg = imagecolorallocatealpha($img, 255, 255, 255, 127);
         imagefill($img, 0, 0, $bg);
-        $r = $w / 2; //圆半径
+        $r   = $w / 2; //圆半径
         for ($x = 0; $x < $w; $x++) {
             for ($y = 0; $y < $h; $y++) {
                 $rgbColor = @imagecolorat($source, $x, $y);
