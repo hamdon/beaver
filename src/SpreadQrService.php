@@ -403,6 +403,9 @@ class SpreadQrService
             }
             @imagecopyresampled($bg, $logoSrc, $this->logoPositionX, $this->logoPositionY, 0, 0, $this->logoWidth, $this->logoWidth, @imagesx($logoSrc), @imagesy($logoSrc));
         }
+        $two = '';
+        $three = '';
+        $four = '';
         if ($this->textOne != '') {
             //增加文字
             if ($this->textLineNumber == 1) {
@@ -419,9 +422,6 @@ class SpreadQrService
                         $one = $this->textOne . '  ' . $this->textTwo;
                     }
                 }
-                $two = '';
-                $three = '';
-                $four = '';
             } else {
                 if ($this->isHtmlEntities == 1) {
                     $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
