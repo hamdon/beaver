@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: hamdon
@@ -59,7 +60,8 @@ class SpreadQrService
         }
         return self::$obj;
     }
-    public function setIsOSS(){
+    public function setIsOSS()
+    {
         $this->isOSS = 1;
         return $this;
     }
@@ -314,7 +316,7 @@ class SpreadQrService
             return '';
         }
         $bg = null;
-        if($this->isOSS == 0){
+        if ($this->isOSS == 0) {
             $paths = parse_url($this->bgImgSrc);
             $bg = null;
             $fileType = exif_imagetype(public_path($paths['path']));
@@ -332,7 +334,7 @@ class SpreadQrService
                     $bg = imagecreatefrompng(public_path($paths['path']));
                     break;
             }
-        }else{
+        } else {
             $bg = null;
             $fileType = exif_imagetype($this->bgImgSrc);
             switch ($fileType) {
@@ -401,62 +403,63 @@ class SpreadQrService
             }
             @imagecopyresampled($bg, $logoSrc, $this->logoPositionX, $this->logoPositionY, 0, 0, $this->logoWidth, $this->logoWidth, @imagesx($logoSrc), @imagesy($logoSrc));
         }
-
-        //增加文字
-        if ($this->textLineNumber == 1) {
-            if ($this->textTwo == '') {
+        if ($this->textOne != '') {
+            //增加文字
+            if ($this->textLineNumber == 1) {
+                if ($this->textTwo == '') {
+                    if ($this->isHtmlEntities == 1) {
+                        $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
+                    } else {
+                        $one = $this->textOne;
+                    }
+                } else {
+                    if ($this->isHtmlEntities == 1) {
+                        $one = mb_convert_encoding($this->textOne . '  ' . $this->textTwo, 'html-entities', 'UTF-8');
+                    } else {
+                        $one = $this->textOne . '  ' . $this->textTwo;
+                    }
+                }
+                $two = '';
+                $three = '';
+                $four = '';
+            } else {
                 if ($this->isHtmlEntities == 1) {
                     $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
+                    $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
+                    $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
+                    $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
                 } else {
                     $one = $this->textOne;
+                    $two = $this->textTwo;
+                    $three = $this->textThree;
+                    $four = $this->textFour;
                 }
-            } else {
+            }
+            if ($this->textContentType == 1) {
                 if ($this->isHtmlEntities == 1) {
-                    $one = mb_convert_encoding($this->textOne . '  ' . $this->textTwo, 'html-entities', 'UTF-8');
+                    $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
+                    $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
+                    $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
+                    $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
                 } else {
-                    $one = $this->textOne . '  ' . $this->textTwo;
+                    $one = $this->textOne;
+                    $two = $this->textTwo;
+                    $three = $this->textThree;
+                    $four = $this->textFour;
                 }
             }
-            $two = '';
-            $three = '';
-            $four = '';
-        } else {
-            if ($this->isHtmlEntities == 1) {
-                $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
-                $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
-                $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
-                $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
+            $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $one); //文字水平居中实质
+            $fontColor = imagecolorallocatealpha($bg, $this->font_color_r, $this->font_color_g, $this->font_color_b, intval((1 - $this->font_color_a) * 127));
+            $width = imagesx($bg);
+            if ($this->fontPositionX == 0) {
+                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY, $fontColor, $this->fontFile, $one);
+                //如果需要加粗,让x坐标加1
+                imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + 1, $this->fontPositionY, $fontColor, $this->fontFile, $one);
             } else {
-                $one = $this->textOne;
-                $two = $this->textTwo;
-                $three = $this->textThree;
-                $four = $this->textFour;
+                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX, $this->fontPositionY, $fontColor, $this->fontFile, $one);
+                //如果需要加粗,让x坐标加1
+                imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + 1, $this->fontPositionY, $fontColor, $this->fontFile, $one);
             }
-        }
-        if ($this->textContentType == 1) {
-            if ($this->isHtmlEntities == 1) {
-                $one = mb_convert_encoding($this->textOne, 'html-entities', 'UTF-8');
-                $two = mb_convert_encoding($this->textTwo, 'html-entities', 'UTF-8');
-                $three = mb_convert_encoding($this->textThree, 'html-entities', 'UTF-8');
-                $four = mb_convert_encoding($this->textFour, 'html-entities', 'UTF-8');
-            } else {
-                $one = $this->textOne;
-                $two = $this->textTwo;
-                $three = $this->textThree;
-                $four = $this->textFour;
-            }
-        }
-        $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $one);//文字水平居中实质
-        $fontColor = imagecolorallocatealpha($bg, $this->font_color_r, $this->font_color_g, $this->font_color_b, intval((1 - $this->font_color_a) * 127));
-        $width = imagesx($bg);
-        if ($this->fontPositionX == 0) {
-            imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY, $fontColor, $this->fontFile, $one);
-            //如果需要加粗,让x坐标加1
-            imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2) + 1, $this->fontPositionY, $fontColor, $this->fontFile, $one);
-        } else {
-            imagettftext($bg, $this->fontSize, 0, $this->fontPositionX, $this->fontPositionY, $fontColor, $this->fontFile, $one);
-            //如果需要加粗,让x坐标加1
-            imagettftext($bg, $this->fontSize, 0, $this->fontPositionX + 1, $this->fontPositionY, $fontColor, $this->fontFile, $one);
         }
         $lineNumber = 0;
         if ($two != '') {
@@ -464,7 +467,7 @@ class SpreadQrService
             if ($this->textLineType == 1) {
                 $lineNumber = 1;
             }
-            $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $two);//文字水平居中实质
+            $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $two); //文字水平居中实质
             if ($this->fontPositionX == 0) {
                 imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $two);
                 //如果需要加粗,让x坐标加1
@@ -480,7 +483,7 @@ class SpreadQrService
             if ($this->textLineType == 1) {
                 $lineNumber = 2;
             }
-            $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $three);//文字水平居中实质
+            $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $three); //文字水平居中实质
             if ($this->fontPositionX == 0) {
                 imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $three);
                 //如果需要加粗,让x坐标加1
@@ -496,7 +499,7 @@ class SpreadQrService
             if ($this->textLineType == 1) {
                 $lineNumber = 3;
             }
-            $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $four);//文字水平居中实质
+            $fontBox = imagettfbbox($this->fontSize, 0, $this->fontFile, $four); //文字水平居中实质
             if ($this->fontPositionX == 0) {
                 imagettftext($bg, $this->fontSize, 0, ceil(($width - $fontBox[2]) / 2), $this->fontPositionY + $this->fontNextLineDistance * $lineNumber, $fontColor, $this->fontFile, $four);
                 //如果需要加粗,让x坐标加1
