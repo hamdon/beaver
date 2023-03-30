@@ -255,7 +255,7 @@ $decryptStr = Hamdon\Beaver\Crypto\RSAService::create()->decryptByPublicKey($enc
 
 ```
 
-# 缓存系列
+# 缓存系列：RedisCacheService
 ```
         $type = $request->get('type');
         $data = [];
