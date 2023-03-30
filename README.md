@@ -254,3 +254,22 @@ $encrypStr = Hamdon\Beaver\Crypto\RSAService::create()->encryptByPrivateKey($sha
 $decryptStr = Hamdon\Beaver\Crypto\RSAService::create()->decryptByPublicKey($encrypStr,$publicPemFile);
 
 ```
+
+# 缓存系列
+```
+        $type = $request->get('type');
+        $data = [];
+        RedisCacheService::create()->common('cache_key_' . $type, ['type' => $type], $data, function ($param, &$data) {
+            $myModel = MyDataModel::where('type', $param['type'])->first();
+            $result = [];
+            if($myModel){
+                $result['type'] = $myModel->type;
+                $result['name'] = $myModel->name;
+                $result['version'] = $myModel->version;
+                $result['status'] = $myModel->status;
+                $result['content'] = $myModel->content;
+            }
+            $data = $result;
+        });
+        return $this->success($data);
+```
