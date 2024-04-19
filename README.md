@@ -273,3 +273,14 @@ $decryptStr = Hamdon\Beaver\Crypto\RSAService::create()->decryptByPublicKey($enc
         });
         return $this->success($data);
 ```
+
+# 坐标系列：HCoordinateService
+```
+$lat1 = '39.886664';
+$lng1 = '116.363277';
+$lat2 = '39.912149';
+$lng2 = '116.411865';
+
+$distance =  HCoordinateService::create()->twoCoordinateDistance($lat1,$lng1,$lat2,$lng2);
+
+```
