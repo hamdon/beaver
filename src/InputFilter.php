@@ -589,7 +589,7 @@ class InputFilter
      * @return bool
      * @throws ControllerException
      */
-    function isCoordinateValue($lngOrLatValue,$msg='坐标值有误') {
+    public static function isCoordinateValue($lngOrLatValue,$msg='坐标值有误') {
         // 使用正则表达式匹配经度或纬度的格式，例如：-90.0 到 90.0 或 -180.0 到 180.0
         $pattern = '/^[-+]?((90(\.0+)?)|([1-8]?\d(\.\d+)?))$/';
         if(preg_match($pattern, $lngOrLatValue)){
