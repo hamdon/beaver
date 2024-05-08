@@ -172,4 +172,47 @@ class NumberService
         }
         return $dayTime;
     }
+
+    
+    /**
+     * 输入一个时间戳输出时间定义：今天、昨天、30天内（显示2-29天前）、1-11月前（规则是满30天为1个月）、超过360天显示很久之前
+     *
+     * @param $timestamp
+     * @return string
+     */
+    public function timeElapsedString($timestamp)
+    {
+        // 获取当前时间戳
+        $currentTimestamp = time();
+        // 计算时间差（秒）
+        $diff = $currentTimestamp - $timestamp;
+        // 定义时间间隔常量
+        $second = 1;
+        $minute = 60 * $second;
+        $hour = 60 * $minute;
+        $day = 24 * $hour;
+        $month = 30 * $day; // 简单按30天计算一个月
+        $year = 360 * $day; // 简单按360天计算一年
+
+        // 判断并返回相应的时间描述
+        if ($diff < 0) {
+            return '未来';
+        } elseif ($diff < $day) {
+//            if ($diff < $hour) {
+//                if ($diff < $minute) {
+//                    return floor($diff / $minute) . '分钟前';
+//                }
+//                return floor($diff / $hour) . '小时前';
+//            }
+            return '今天';
+        } elseif ($diff < 2 * $day) {
+            return '昨天';
+        } elseif ($diff < $month) {
+            return floor($diff / $day) . '天前';
+        } elseif ($diff < 12 * $month) {
+            return floor($diff / $month) . '月前';
+        } elseif ($diff < $year) {
+            return '很久之前';
+        }
+    }
 }
